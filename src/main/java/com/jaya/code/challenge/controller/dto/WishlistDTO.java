@@ -1,5 +1,6 @@
 package com.jaya.code.challenge.controller.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class WishlistDTO implements Serializable {
 
     private String id;
 
+    @NotBlank
     private String owner;
 
     private LocalDate lastUpdate;

@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/wishlists")
@@ -45,7 +47,8 @@ public class WishlistController {
     }
 
     @PostMapping
-    public void saveNewWishList(@RequestBody WishlistDTO wishlist) {
+    @ResponseStatus(CREATED)
+    public void saveNewWishList(@RequestBody @Valid WishlistDTO wishlist) {
         service.save(mapper.toEntity(wishlist));
     }
 
@@ -55,7 +58,7 @@ public class WishlistController {
     }
 
     @PostMapping("/{id}")
-    @ResponseStatus(CREATED)
+    @ResponseStatus(OK)
     public void addNewProductInList(@PathVariable String id, @RequestParam String productId) {
         service.addProduct(id, productId);
     }
