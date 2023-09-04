@@ -4,6 +4,7 @@ import com.jaya.code.challenge.domain.Product;
 import com.jaya.code.challenge.domain.Wishlist;
 import com.jaya.code.challenge.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -28,6 +29,10 @@ public class WishlistService {
         repository.save(wishlist);
     }
 
+    public void saveAll(List<Wishlist> wishlists) {
+        repository.saveAll(wishlists);
+    }
+
     public void addProduct(String wishlistId, String productId) {
         Wishlist wishlist = findById(wishlistId);
 
@@ -42,6 +47,10 @@ public class WishlistService {
     public void removeProductFromWishlist(String wishlistId, String productId) {
         Wishlist wishlist = findById(wishlistId);
         productService.findById(productId);
+
+        if (wishlist.getProducts().stream().allMatch(p -> !p.getId().equals(productId)))
+            throw new HttpClientErrorException(BAD_REQUEST, "Product does not exist in this wishlist");
+
         wishlist.setProducts(wishlist.getProducts().stream().filter(p -> !p.getId().equals(productId)).toList());
         repository.save(wishlist);
     }
