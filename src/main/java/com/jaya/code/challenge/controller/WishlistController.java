@@ -1,7 +1,9 @@
 package com.jaya.code.challenge.controller;
 
-import com.jaya.code.challenge.domain.Product;
-import com.jaya.code.challenge.domain.Wishlist;
+import com.jaya.code.challenge.controller.dto.ProductDTO;
+import com.jaya.code.challenge.controller.dto.WishlistDTO;
+import com.jaya.code.challenge.mapping.ProductMapper;
+import com.jaya.code.challenge.mapping.WishlistMapper;
 import com.jaya.code.challenge.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,12 @@ public class WishlistController {
     @Autowired
     private WishlistService service;
 
+    @Autowired
+    private WishlistMapper mapper;
+
+    @Autowired
+    private ProductMapper productMapper;
+
     @GetMapping("/{id}")
     public ResponseEntity<Void> existsProductInWishlist(@PathVariable String id, @RequestParam String productId) {
         if (service.existsProductInList(id, productId)) {
@@ -37,13 +45,13 @@ public class WishlistController {
     }
 
     @PostMapping
-    public void saveNewWishList(@RequestBody Wishlist wishlist) {
-        service.save(wishlist);
+    public void saveNewWishList(@RequestBody WishlistDTO wishlist) {
+        service.save(mapper.toEntity(wishlist));
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<List<Product>> findAllProductsFromWishlist(@PathVariable String id) {
-        return ResponseEntity.ok(service.getAllProductsFromWishlist(id));
+    public ResponseEntity<List<ProductDTO>> findAllProductsFromWishlist(@PathVariable String id) {
+        return ResponseEntity.ok(productMapper.toDtos(service.getAllProductsFromWishlist(id)));
     }
 
     @PostMapping("/{id}")
