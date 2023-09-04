@@ -13,7 +13,8 @@ Repository containing a coding challenge for Jaya recruitment process.
 #### In MondoBD shell you can now create 'wishlist' and 'product' collections and start testing the application
 
 
-
+#### To restart databse in the future without needing to remove the existent container, use:
+> docker start local-mongo-db 
 
 
 
