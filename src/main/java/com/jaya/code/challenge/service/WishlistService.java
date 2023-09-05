@@ -22,6 +22,8 @@ public class WishlistService {
     @Autowired
     private ProductService productService;
 
+    private static final int LIMITE_MAX_PRODUTOS = 20;
+
     public Wishlist findById(String id) {
         return repository.findById(id).orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Wishlist não existe"));
     }
@@ -36,6 +38,9 @@ public class WishlistService {
 
     public void addProduct(String wishlistId, String productId) {
         Wishlist wishlist = findById(wishlistId);
+
+        if (wishlist.getProducts().size() == LIMITE_MAX_PRODUTOS)
+            throw new HttpClientErrorException(BAD_REQUEST, "Não foi possível adicionar o produto na lista. Limite máximo já foi atingido!");
 
         wishlist.getProducts().add(productService.findById(productId));
         repository.save(wishlist);
