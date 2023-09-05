@@ -1,7 +1,7 @@
 # Jaya Code Challenge
 Repository containing a coding challenge for Jaya recruitment process.
 
-## The project consists of an REST API to manage the wishlists from an e-commerce clients. This API must allow it's users to:
+## The project consists of a REST API to manage the wishlists from an e-commerce clients. This API must allow it's users to:
 - Add products to a wishlist
 - Remove a given product from a wishlist
 - Consult if a given product is in the wishlist
