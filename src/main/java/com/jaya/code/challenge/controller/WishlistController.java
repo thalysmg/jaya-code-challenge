@@ -39,11 +39,10 @@ public class WishlistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Void> existsProductInWishlist(@PathVariable String id, @RequestParam String productId) {
-        if (service.existsProductInList(id, productId)) {
+        if (service.existsProductInList(id, productId))
             return ResponseEntity.ok().build();
-        }
-        else
-            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

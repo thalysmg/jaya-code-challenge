@@ -13,17 +13,17 @@ import org.springframework.web.client.HttpClientErrorException;
 public class RestExceptionHandler {
 
     @ExceptionHandler(HttpClientErrorException.class)
-    public ResponseEntity handleClientErrorException(HttpClientErrorException exception) {
-        log.error(exception.getMessage());
-        return ResponseEntity.badRequest().body(exception.getMessage());
+    public ResponseEntity handleClientErrorException(HttpClientErrorException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        log.error(exception.getMessage());
+    public ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
         String errorMsg = "";
-        for (FieldError error: exception.getFieldErrors())
+        for (FieldError error: e.getFieldErrors())
             errorMsg += "Field '" + error.getField() + "' " + error.getDefaultMessage() + "; ";
-        return ResponseEntity.badRequest().body(errorMsg);
+        return ResponseEntity.status(e.getStatusCode()).body(errorMsg);
     }
 }

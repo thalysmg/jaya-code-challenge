@@ -11,6 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class WishlistService {
@@ -49,7 +50,7 @@ public class WishlistService {
         productService.findById(productId);
 
         if (wishlist.getProducts().stream().allMatch(p -> !p.getId().equals(productId)))
-            throw new HttpClientErrorException(BAD_REQUEST, "Product does not exist in this wishlist");
+            throw new HttpClientErrorException(NOT_FOUND, "O produto informado não está nesta lista de desejos.");
 
         wishlist.setProducts(wishlist.getProducts().stream().filter(p -> !p.getId().equals(productId)).toList());
         repository.save(wishlist);
