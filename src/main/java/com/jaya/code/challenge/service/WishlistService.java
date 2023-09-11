@@ -22,8 +22,6 @@ public class WishlistService {
     @Autowired
     private ProductService productService;
 
-    private static final int LIMITE_MAX_PRODUTOS = 20;
-
     public Wishlist findById(String id) {
         return repository.findById(id).orElseThrow(() -> new HttpClientErrorException(BAD_REQUEST, "Wishlist não existe"));
     }
@@ -39,10 +37,10 @@ public class WishlistService {
     public void addProduct(String wishlistId, String productId) {
         Wishlist wishlist = findById(wishlistId);
 
-        if (wishlist.getProducts().size() == LIMITE_MAX_PRODUTOS)
+        if (wishlist.limitExceeded())
             throw new HttpClientErrorException(BAD_REQUEST, "Não foi possível adicionar o produto na lista. Limite máximo já foi atingido!");
 
-        wishlist.getProducts().add(productService.findById(productId));
+        wishlist.addNewProduct(productService.findById(productId));
         repository.save(wishlist);
     }
 
@@ -54,15 +52,10 @@ public class WishlistService {
         Wishlist wishlist = findById(wishlistId);
         productService.findById(productId);
 
-        if (wishlist.getProducts().stream().allMatch(p -> !p.getId().equals(productId)))
+        if (wishlist.productIsNotInList(productId))
             throw new HttpClientErrorException(NOT_FOUND, "O produto informado não está nesta lista de desejos.");
 
-        wishlist.setProducts(wishlist.getProducts().stream().filter(p -> !p.getId().equals(productId)).toList());
+        wishlist.removeProduct(productId);
         repository.save(wishlist);
-    }
-
-    public boolean existsProductInList(String wishlistId, String productId) {
-        Wishlist wishlist = findById(wishlistId);
-        return wishlist.getProducts().stream().anyMatch(p -> p.getId().equals(productId));
     }
 }

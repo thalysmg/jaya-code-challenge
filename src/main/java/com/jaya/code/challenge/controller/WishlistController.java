@@ -39,7 +39,7 @@ public class WishlistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Void> existsProductInWishlist(@PathVariable String id, @RequestParam String productId) {
-        if (service.existsProductInList(id, productId))
+        if (service.findById(id).existsProductInList(productId))
             return ResponseEntity.ok().build();
 
         return ResponseEntity.notFound().build();
